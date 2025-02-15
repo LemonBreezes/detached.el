@@ -1631,7 +1631,9 @@ Optionally make the path LOCAL to host."
 (defun detached--db-update-sessions ()
   "Write `detached--sessions' to database."
   (run-hooks 'detached-update-db-hooks)
-  (let ((db (expand-file-name "detached-sessions.db" detached-db-directory)))
+  (let ((db (expand-file-name "detached-sessions.db" detached-db-directory))
+        (print-length nil)
+        (print-level nil))
     (with-temp-file db
       (insert (format ";; Detached Session Version: %s\n\n" detached-session-version))
       (prin1 detached--sessions (current-buffer)))))
