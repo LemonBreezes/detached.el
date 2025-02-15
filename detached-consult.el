@@ -97,8 +97,8 @@ See `consult-multi' for a description of the source values."
             ,(lambda ()
                (mapcar #'car
                        (thread-last (detached-session-candidates (detached-get-sessions))
-                                    (seq-map #'cdr)
-                                    (seq-filter #'detached-session-active-p)))))
+                                    (seq-filter (lambda (alist-item)
+                                                  (detached-session-active-p (cdr alist-item))))))))
   "Active `detached' sessions as a source for `consult'.")
 
 (defvar detached-consult--source-inactive-session
@@ -111,8 +111,8 @@ See `consult-multi' for a description of the source values."
             ,(lambda ()
                (mapcar #'car
                        (thread-last (detached-session-candidates (detached-get-sessions))
-                                    (seq-map #'cdr)
-                                    (seq-filter #'detached-session-inactive-p)))))
+                                    (seq-filter (lambda (alist-item)
+                                                  (detached-session-inactive-p (cdr alist-item))))))))
   "Inactive `detached' sessions as a source for `consult'.")
 
 (defvar detached-consult--source-failure-session
@@ -125,8 +125,8 @@ See `consult-multi' for a description of the source values."
             ,(lambda ()
                (mapcar #'car
                        (thread-last (detached-session-candidates (detached-get-sessions))
-                                    (seq-map #'cdr)
-                                    (seq-filter #'detached-session-failed-p)))))
+                                    (seq-filter (lambda (alist-item)
+                                                  (detached-session-failed-p (cdr alist-item))))))))
   "Failed `detached' sessions as a source for `consult'.")
 
 (defvar detached-consult--source-success-session
@@ -139,8 +139,8 @@ See `consult-multi' for a description of the source values."
             ,(lambda ()
                (mapcar #'car
                        (thread-last (detached-session-candidates (detached-get-sessions))
-                                    (seq-map #'cdr)
-                                    (seq-remove #'detached-session-failed-p)))))
+                                    (seq-remove (lambda (alist-item)
+                                                  (detached-session-failed-p (cdr alist-item))))))))
   "Successful `detached' sessions as a source for `consult'.")
 
 (defvar detached-consult--source-local-session
@@ -153,8 +153,8 @@ See `consult-multi' for a description of the source values."
             ,(lambda ()
                (mapcar #'car
                        (thread-last (detached-session-candidates (detached-get-sessions))
-                                    (seq-map #'cdr)
-                                    (seq-filter #'detached-session-localhost-p))))
+                                    (seq-filter (lambda (alist-item)
+                                                  (detached-session-localhost-p (cdr alist-item)))))))
             "Local host `detached' sessions as a source for `consult'."))
 
 (defvar detached-consult--source-remote-session
@@ -167,8 +167,8 @@ See `consult-multi' for a description of the source values."
             ,(lambda ()
                (mapcar #'car
                        (thread-last (detached-session-candidates (detached-get-sessions))
-                                    (seq-map #'cdr)
-                                    (seq-filter #'detached-session-remotehost-p)))))
+                                    (seq-filter (lambda (alist-item)
+                                                  (detached-session-remotehost-p (cdr alist-item))))))))
   "Remote host `detached' sessions as a source for `consult'.")
 
 (defvar detached-consult--source-current-session
@@ -182,10 +182,9 @@ See `consult-multi' for a description of the source values."
                (let ((host-name (car (detached--host))))
                  (mapcar #'car
                          (thread-last (detached-session-candidates (detached-get-sessions))
-                                      (seq-map #'cdr)
                                       (seq-filter
-                                       (lambda (x)
-                                         (string= (detached-session-host-name x) host-name))))))))
+                                       (lambda (alist-item)
+                                         (string= (detached-session-host-name (cdr alist-item)) host-name))))))))
   "Current host `detached' sessions as a source for `consult'.")
 
 ;;;; Commands
